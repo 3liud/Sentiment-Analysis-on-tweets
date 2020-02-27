@@ -1,31 +1,25 @@
-import tweepy
-import os
-import pandas as pd
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import seaborn as sns 
 
-consumer_key = os.environ.get('CONSUMER_KEY')
-consumer_secret = os.environ.get('CONSUMER_SECRET')
-access_token = os.environ.get('ACCESS_TOKEN')
-access_token_secret = os.environ.get('ACCESS_TOKEN_SECRE')
+#data processing 
+from textblob import TextBlob 
+import re 
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer 
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
-q = input('enter the hashtag or keyword: ')
+#model selection adn Validation
+from sklearn.naive_bayes import MultinomialNB 
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline 
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth, wait_on_rate_limit=True)
+# Reading the data into pandas
 
-#create list to append tweets to
-tweets = []
+training_set = pd.read_csv('train_tweets.csv')
+testing_set = pd.read_csv('test_tweets.csv')
 
-#append all tweet data to list
-for tweet in tweepy.Cursor(api.search, q, count=1000000).items():
-    tweets.append(tweet)
+# EDA
+sns.barplot('label','length', data = training_set, palette='PRGn')
 
-    #copnvert tweets list to pandas.Dataframe
-tweets_df = pd.DataFrame(vars(tweets[i])
-for i in range(len(tweets)))
-
-#define file path to save teh csv file with the Data
-FILE_PATH = 'tweets_data0.csv'
-
-#use pandas to save dataframeot csv
-tweets_df.to_csv(FILE_PATH)
